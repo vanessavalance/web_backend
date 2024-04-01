@@ -1,0 +1,140 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "API",
+        "description": "API web_Backend",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8000"
+        }
+    ],
+    "paths": {
+        "/api/v1/users":{
+            "post":{
+                "description": "Register a new user",
+                "requestBody":{
+                    "content": {
+                        "application/json":{
+                            "examples":{
+                                "John Doe":{
+                                    "description":"Register user John Doe",
+                                    "value":{
+                                        "name":"John Doe",
+                                        "email":"johndoe@example.com",
+                                        "password":"iniRahasia",
+                                        "password_confirmation":"iniRahasia"
+                                    }
+                                }
+                            },
+                            "schema":{
+                                "type": "object",
+                                "required": [
+                                    "name",
+                                    "email",
+                                    "password",
+                                    "password_confirmation"
+                                ],
+                                "properties": {
+                                    "name":{
+                                        "type": "string"
+                                    },
+                                    "email":{
+                                        "type": "string"
+                                    },
+                                    "password":{
+                                        "type": "string"
+                                    },
+                                    "password_confirmation":{
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses":{
+                    "201":{
+                        "description": "Register User successfully",
+                        "content": {
+                            "application/json":{
+                                "examples":{
+                                    "success":{
+                                        "description": "Register User successfull",
+                                        "value":{
+                                            "data":{
+                                                "id":"1",
+                                                "name":"John Doe",
+                                                "email":"john.doe@example.com"
+                                            }
+                                        }
+                                    }
+                                },
+                                "schema":{
+                                    "type": "object",
+                                    "properties": {
+                                        "id":{
+                                            "type": "string"
+                                        },
+                                        "name":{
+                                            "type": "string"
+                                        },
+                                        "email":{
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400":{
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json":{
+                                "examples": {
+                                    "Validation Error":{
+                                        "description": "Validation error",
+                                        "value":{
+                                            "errors":{
+                                                "name":"The name field is required",
+                                                "email":[
+                                                    "The email field is required",
+                                                    "The email has already been taken"
+                                                ],
+                                                "password":[
+                                                    "The password field is required",
+                                                    "Password must be at least 8 characters"
+                                                ]
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+                        }
+                    }
+                }
+            }
+        },
+        "api/v1/users/login": {
+            "post": {
+                "description": "Login user"
+            }
+        },
+        "api/v1/users/profile": {
+            "get": {
+                "description": "Get User Profile"
+            },
+            "patch":{
+                "description": "Update User Profile"
+            }
+        },
+        "api/v1/users/logout": {
+            "delete": {
+                "description": "Logout User"
+            }
+        }
+    }
+
+}
