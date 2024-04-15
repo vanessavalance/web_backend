@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\support\Facades\Hash;
 use App\Models\User;
 use Tests\TestCase;
 
@@ -83,6 +84,8 @@ class UserTest extends TestCase
 
             $user = User::where('email','john.doe@gmail.com')->first();
             self::assertNotNull($user->remember_token);
+
+        
     }
 
     public function testLoginFailedEmail()
@@ -108,6 +111,64 @@ class UserTest extends TestCase
             ->assertJson([
                 "errors"=>[
                     "message"=>['username or password wrong']
+                ]
+            ]);
+    }
+
+    public function testGetSuccess()
+    {
+        $user = User::create([
+            'name' => 'Mitchell Admin',
+            'email' => 'admin@gmail.com',
+            'password' => Hash::make('12345678'),
+            'remember_token' => '1234-5678'
+        ]);
+
+
+        $this->get('/api/v1/users/profile', [
+            'Authorization' => '1234-5678'
+        ])->assertStatus(200)
+            ->assertJson([
+                "data"=>[
+                    "email"=>'admin@gmail.com',
+                    "name"=>'Mitchell Admin',
+                ]
+            ]);
+    }
+
+    public function testGetFailedUnauthorized()
+    {
+        $user = User::create([
+            'name' => 'Mitchell Admin',
+            'email' => 'admin@gmail.com',
+            'password' => Hash::make('12345678'),
+            'remember_token' => '1234-5678'
+        ]);
+
+        $this->get('/api/v1/users/profile')
+            ->assertStatus(401)
+            ->assertJson([
+                "error" => [
+                    'message' => ['Unauthorized']
+                ]
+            ]);
+    }
+
+    public function testGetInvalidToken()
+    {
+        $user = User::create([
+            'name' => 'Mitchell Admin',
+            'email' => 'admin@gmail.com',
+            'password' => Hash::make('12345678'),
+            'remember_token' => '1234-5678'
+        ]);
+
+        $this->get('/api/v1/users/profile', [
+            'Authorization' => '8765-4321'
+        ])->assertStatus(401)
+            ->assertJson([
+                "error" => [
+                    'message' => ['Unauthorized']
                 ]
             ]);
     }
