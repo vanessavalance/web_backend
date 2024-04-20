@@ -255,4 +255,46 @@ class UserTest extends TestCase
                 ]
             ]);
     }
+
+    public function testLogoutSuccess()
+    {
+        $user = User::create([
+            'name' => 'Mitchell Admin',
+            'email' => 'admin@gmail.com',
+            'password' => Hash::make('12345678'),
+            'remember_token' => '1234-5678'
+        ]);
+
+
+        $this->delete(uri: '/api/v1/users/logout', headers:[
+            'Authorization' => '1234-5678'
+        ])->assertStatus(200)
+            ->assertJson([
+                "data"=>true
+            ]);
+
+        $user = User::where('email','admin@gmail.com')->first();
+        self::assertNull($user->remember_token);
+    }
+
+    public function testLogoutFailed()
+    {
+        $user = User::create([
+            'name' => 'Mitchell Admin',
+            'email' => 'admin@gmail.com',
+            'password' => Hash::make('12345678'),
+            'remember_token' => '1234-5678'
+        ]);
+
+        $this->delete(uri:'/api/v1/users/logout',  headers: [
+                'Authorization' => 'Wrong-Authorization-Token'
+        ])->assertStatus(401)
+            ->assertJson([
+                "error"=>[
+                    "message"=>['Unauthorized']
+                ]
+            ]);
+    }
+
+    
 }
