@@ -26,4 +26,9 @@ Route::group(['prefix'=>'v1'],function(){
         Route::patch('/users/profile',[App\Http\Controllers\UserController::class,'update']);
         Route::delete('/users/logout',[App\Http\Controllers\UserController::class,'logout']);
     });
+
+    Route::post('/contacts', [ContactController::class, 'store']);
+    Route::patch('/contacts/{id}', [ContactController::class, 'update']);
+    Route::delete('/contacts/{id}', [ContactController::class, 'destroy']);
+    Route::get('/contacts/search', [ContactController::class, 'search']);
 });
