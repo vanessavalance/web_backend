@@ -33,12 +33,18 @@ class ContactsController extends Controller
 
     public function delete($id): JsonResponse
     {
-        $contact = Contacts::findOrFail($id);
+        $contact = Contacts::find($id);
+        if (!$contact){
+            return response()->json([
+                'message' => 'Contact not found'
+            ]);
+        }
         $contact->delete();
         return response()->json([
             'data' => true,
             'message' => 'Contact deleted successfully'
         ]);
+        
     }
 
     public function search(Request $request): JsonResponse

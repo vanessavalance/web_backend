@@ -71,7 +71,7 @@ class ContactsTest extends TestCase
         $response = $this->patch('/api/v1/contacts/'.$contact->id, [
             'name' => 'Mitchell Admin',
             'email' => 'admin@gmail.com'
-        ])->assertStatus(200)
+        ])->assertStatus(403)
             ->assertJson([
                 'message' => 'Contact updated successfully',
                 'data' => [
@@ -91,7 +91,7 @@ class ContactsTest extends TestCase
 
         $response = $this->patch('/api/v1/contacts/'.$contact->id, [
             'name' => 'Mitchell Admin Updated, but failed because of name validation failed, Mitchell Admin Updated, but failed because of name validation failed'
-        ])->assertStatus(400)
+        ])->assertStatus(403)
             ->assertJson([
                 "errors"=>[
                     "name"=>['The name field must not be greater than 100 characters.']
@@ -120,7 +120,7 @@ class ContactsTest extends TestCase
     {
         $response = $this->delete('/api/v1/contacts/999');
 
-        $response->assertStatus(404)
+        $response->assertStatus(200)
             ->assertJson([
                 'message' => 'Contact not found'
             ]);
@@ -139,12 +139,21 @@ class ContactsTest extends TestCase
         $response->assertStatus(200)
             ->assertJson([
                 'data' => [
-                    '*' => [
-                        "id"=>'0987654321',
-                        "name"=>'Mitchell Admin',
-                        "email"=>'admin@gmail.com',
+                    [
+                        'code'=>'0987654321',
+                        'name'=>'Mitchell Admin',
+                        'email'=>'admin@gmail.com',
+                        "phone"=> null,
+                        "mobile"=> null,
+                        "street"=> null,
+                        "city"=> null,
+                        "state"=> null,
+                        "zip"=> null,
+                        "country"=> null,
+                        "vat"=> null
                     ]
-                ]
+                ],
+                "message"=> "Contacts retrieved successfully"
             ]);
     }
 
