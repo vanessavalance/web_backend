@@ -19,14 +19,6 @@ class ContactsUpdateRequest extends FormRequest
             'code' => 'required|string|unique:contacts|max:10',
             'name' => 'required|string|max:100',
             'email' => 'required|string|email|unique:contacts|max:100',
-            'phone' => 'nullable|string|max:20',
-            'mobile' => 'nullable|string|max:20',
-            'street' => 'nullable|string',
-            'city' => 'nullable|string',
-            'state' => 'nullable|string',
-            'zip' => 'nullable|string',
-            'country' => 'nullable|string',
-            'vat' => 'nullable|string',
         ];
     }
 
