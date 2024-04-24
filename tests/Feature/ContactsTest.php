@@ -65,20 +65,24 @@ class ContactsTest extends TestCase
         $contact = Contacts::create([
             'code' => '0987654321',
             'name' => 'Mitchell Admin',
-            'email' => 'admin@gmail.com',
+            'email' => 'admin@gmail.com'
         ]);
+        $oldContacts = Contacts::where('email','admin@gmail.com')->first();
+
 
         $response = $this->patch('/api/v1/contacts/'.$contact->id, [
-            'name' => 'Mitchell Admin',
-            'email' => 'admin@gmail.com'
-        ])->assertStatus(403)
+            'name' => 'Mitchell Admin Updated'
+        ])->assertStatus(200)
             ->assertJson([
                 'message' => 'Contact updated successfully',
                 'data' => [
-                    'name' => 'Mitchell Admin',
-                    'email' => 'admin@gmail.com'
+                    'email' => 'admin@gmail.com',
+                    'name' => 'Mitchell Admin Updated',
                 ]
             ]);
+        
+        $newContacts = Contacts::where('email','admin@gmail.com')->first();
+        self::assertNotEquals($oldContacts->name, $newContacts->name);
     }
 
     public function testUpdateContactsFailed()
@@ -90,8 +94,8 @@ class ContactsTest extends TestCase
         ]);
 
         $response = $this->patch('/api/v1/contacts/'.$contact->id, [
-            'name' => 'Mitchell Admin Updated, but failed because of name validation failed, Mitchell Admin Updated, but failed because of name validation failed'
-        ])->assertStatus(403)
+            'name' => 'Mitchell Admin Updated, but failed because of name validation failed'
+        ])->assertStatus(400)
             ->assertJson([
                 "errors"=>[
                     "name"=>['The name field must not be greater than 100 characters.']
