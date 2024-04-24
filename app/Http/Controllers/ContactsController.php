@@ -24,12 +24,16 @@ class ContactsController extends Controller
     public function update(ContactsUpdateRequest $request, $id): JsonResponse
     {
         $contact = Contacts::find($id);
-        $contact->update($request->validated());
+        
          if (!$contact){
             return response()->json([
                 'message' => 'Contact not found'
-            ]);
+            ], 404);
         }
+
+        
+        $contact->update($request->validated());
+        
         return response()->json([
             'data' => new ContactsResource($contact),
             'message' => 'Contact updated successfully'
