@@ -16,9 +16,7 @@ class ContactsUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'code' => 'required|string|unique:contacts|max:10',
-            'name' => 'required|string|max:100',
-            'email' => 'required|string|email|unique:contacts|max:100',
+            'name' => 'required|string|max:100'
         ];
     }
 
